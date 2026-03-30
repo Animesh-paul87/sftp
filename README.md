@@ -47,7 +47,7 @@ systemctl restart sshd
 
 
 
-# sftp configuration Using bind Mount 2
+# sftp configuration Using bind Mount 2 (configuration need to check not working)
 ==============================================
 # Create a Directory Structure (will Create a 'Jail' Folder structure that Root Owns, and a "Home" folder that test1 ownes, we need to map them together.
 
@@ -76,6 +76,18 @@ To make this permanent after a reboot, add this line to fstab
 fstab entry
 ====================
  /home/test1_files       /sftp/test1    none bind 0 0
+```
+sshd_config
+```
+Match User test1
+#User is locked inside their own folder name only
+ChrootDirectory /sftp/test1
+#Force SFTP and apply a umask for proper file Permission
+ForceCommand internal-sftp
+AllowTcpForwarding no
+X11Forwarding no
+PermitTunnel no
+AllowAgentForwarding no
 ```
 
 
