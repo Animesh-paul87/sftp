@@ -57,37 +57,38 @@ sudo useradd -m -s /sbin/nologin test1
 ```
 # Crete the sftp jail (Must be owned by root)
  ```
- sudo mkdir -p /sftp/test1
- sudo chown root:root /sftp/test1
- sudo chown 755 /sftp/test1
+sudo mkdir -p /home/test1_data
+sudo chown test1:test1 /home/test1_data
+sudo chmod 755 /home/test1_data
 ```
  2. The actual storage location (Owned by test1), This is where the actual file will physically stay
 ```
-sudo mkdir -p /home/test1_files
-sudo chown test1:test1 /home/test1_files
+sudo mkdir -p /sftp/test1/files
+sudo chown root:root /sftp/test1
+sudo chown root:root /sftp/test1/files
+sudo chmod 755 /sftp/test1
+sudo chmod 755 /sftp/test1/files
 ```
 3. The "Mount Bind" ----> below command makes the system think /home/test1_files is /sftp/test1, This satisfies the root requirement of the jail
 4. while giving the user write access to the "root" of their login
 ```
-sudo mount --bind  /home/test1_files /sftp/test1
+sudo mount --bind /home/test1_data /sftp/test1/files
 ```
 To make this permanent after a reboot, add this line to fstab
 ```
 fstab entry
 ====================
- /home/test1_files       /sftp/test1    none bind 0 0
+/home/test1_data    /sftp/test1/files    none    bind    0    0
 ```
 sshd_config
 ```
 Match User test1
-#User is locked inside their own folder name only
-ChrootDirectory /sftp/test1
-#Force SFTP and apply a umask for proper file Permission
-ForceCommand internal-sftp
-AllowTcpForwarding no
-X11Forwarding no
-PermitTunnel no
-AllowAgentForwarding no
+    ChrootDirectory /sftp/test1
+    ForceCommand internal-sftp
+    AllowTcpForwarding no
+    X11Forwarding no
+    PermitTunnel no
+    AllowAgentForwarding no
 ```
 
 
