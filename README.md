@@ -1,5 +1,41 @@
 # sftp configuration 1
 ==============================================
+1.  Create user with No shell access
+sudo useradd -m -s /sin/nologin test1
+sudo passwd test1
+
+2. Setup the chroot directory (Must be owned by root)
+sudo chown root:root /home/test1
+sudo chmod 755 /home/test1
+
+3. Crete a 'uploads' folder where the user can actually write files
+
+sudo mkdir /home/test1/uploads
+sudo chown test1:test1 /home/test1/uploads
+Configure SSH Daemon
+=====================
+we need to tell the ssh service to treat test1 different by using the internal-sftp subsystem.
+edit /etc/ssh/sshd_config
+----------------------------
+Match User test1
+ChrootDirectory /home/test1
+#Force SFTP and apply a umask for proper file Permission
+ForceCommand internal-sftp 
+AllowTcpForwarding no
+X11Forwarding no
+PermitTunnel no
+AllowAgentForwarding no
+
+Verify and restart the ssh service
+-----------------------------------------
+To check the Configuration
+--------------------------
+sshd -t
+
+restart the sshd service 
+---------------------------
+systemctl restart sshd
+
 
 
 
@@ -29,6 +65,9 @@ To make this permanent after a reboot, add this line to fstab
 fstab entry
 ====================
  /home/test1_files       /sftp/test1    none bind 0 0
+
+
+
 
 
 
