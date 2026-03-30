@@ -2,7 +2,7 @@
 ==============================================
 1.  Create user with No shell access
 ```
-sudo useradd -m -s /sin/nologin test1
+sudo useradd -m -s /sbin/nologin test1
 sudo passwd test1
 ```
 2. Setup the chroot directory (Must be owned by root)
@@ -53,7 +53,7 @@ systemctl restart sshd
 
 1.  Create user with No shell access
 ```
-sudo useradd -m -s /sin/nologin test1
+sudo useradd -m -s /sbin/nologin test1
 ```
 # Crete the sftp jail (Must be owned by root)
  ```
@@ -93,7 +93,7 @@ System Preperation
 =============================================================================
 1. Create user with No shell access
 ```
-sudo useradd -m -s /sin/nologin test1
+sudo useradd -m -s /sbin/nologin test1
 ```
 2. set the directory ownership to root (Required for chroot)
 ```
